@@ -1,0 +1,65 @@
+erDiagram
+    users {
+        int user_id PK
+        varchar username UK
+        varchar password_hash
+        varchar email UK
+        varchar first_name
+        varchar last_name
+        timestamp created_at
+        timestamp last_login
+        boolean is_active
+    }
+
+    roles {
+        int role_id PK
+        varchar role_name UK
+        text description
+    }
+
+    user_roles {
+        int user_id PK,FK
+        int role_id PK,FK
+        timestamp assigned_at
+    }
+
+    accounts {
+        int account_id PK
+        int user_id FK
+        varchar account_number UK
+        enum account_type
+        decimal balance
+        varchar currency
+        timestamp created_at
+        boolean is_active
+    }
+
+    transactions {
+        int transaction_id PK
+        int from_account_id FK
+        int to_account_id FK
+        decimal amount
+        varchar currency
+        enum transaction_type
+        enum status
+        text description
+        timestamp created_at
+        timestamp completed_at
+    }
+
+    audit_logs {
+        int log_id PK
+        int user_id FK
+        varchar action_type
+        text action_description
+        varchar ip_address
+        timestamp created_at
+    }
+
+    users ||--o{ user_roles : has
+    roles ||--o{ user_roles : assigned_to
+    users ||--o{ accounts : owns
+    users ||--o{ audit_logs : generates
+    accounts ||--o{ transactions : sends
+    accounts ||--o{ transactions : receives
+} 

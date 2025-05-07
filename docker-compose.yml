@@ -1,0 +1,38 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: internet_bank_db
+    environment:
+      MYSQL_ROOT_PASSWORD: '123'
+      MYSQL_DATABASE: internet_bank
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./createtables.sql:/docker-entrypoint-initdb.d/01-createtables.sql
+      - ./sampledata.sql:/docker-entrypoint-initdb.d/02-sampledata.sql
+      - ./permissions.sql:/docker-entrypoint-initdb.d/03-permissions.sql
+    networks:
+      - bank_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: internet_bank_phpmyadmin
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: '123'
+    ports:
+      - "8080:80"
+    depends_on:
+      - mariadb
+    networks:
+      - bank_network
+
+volumes:
+  mariadb_data:
+    name: internet_bank_data
+
+networks:
+  bank_network:
+    name: internet_bank_network 
