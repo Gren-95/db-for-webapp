@@ -1,9 +1,16 @@
 erDiagram
+    users ||--o{ user_roles : has
+    roles ||--o{ user_roles : assigned_to
+    users ||--o{ accounts : owns
+    users ||--o{ audit_logs : generates
+    accounts ||--o{ transactions : sends
+    accounts ||--o{ transactions : receives
+
     users {
-        int user_id PK
-        varchar username UK
+        int user_id
+        varchar username
         varchar password_hash
-        varchar email UK
+        varchar email
         varchar first_name
         varchar last_name
         timestamp created_at
@@ -12,21 +19,21 @@ erDiagram
     }
 
     roles {
-        int role_id PK
-        varchar role_name UK
+        int role_id
+        varchar role_name
         text description
     }
 
     user_roles {
-        int user_id PK,FK
-        int role_id PK,FK
+        int user_id
+        int role_id
         timestamp assigned_at
     }
 
     accounts {
-        int account_id PK
-        int user_id FK
-        varchar account_number UK
+        int account_id
+        int user_id
+        varchar account_number
         enum account_type
         decimal balance
         varchar currency
@@ -35,9 +42,9 @@ erDiagram
     }
 
     transactions {
-        int transaction_id PK
-        int from_account_id FK
-        int to_account_id FK
+        int transaction_id
+        int from_account_id
+        int to_account_id
         decimal amount
         varchar currency
         enum transaction_type
@@ -48,18 +55,11 @@ erDiagram
     }
 
     audit_logs {
-        int log_id PK
-        int user_id FK
+        int log_id
+        int user_id
         varchar action_type
         text action_description
         varchar ip_address
         timestamp created_at
     }
-
-    users ||--o{ user_roles : has
-    roles ||--o{ user_roles : assigned_to
-    users ||--o{ accounts : owns
-    users ||--o{ audit_logs : generates
-    accounts ||--o{ transactions : sends
-    accounts ||--o{ transactions : receives
 } 
